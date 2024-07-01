@@ -1,0 +1,17 @@
+===Vung Tau: 2 NV; AVG = 11.50 trieu
+Ho va ten: Tran Van D
+Luong: 13.000000
+Chuc vu: Nhan Vien
+Ho va ten: Nguyen Van B
+Luong: 10.000000
+Chuc vu: Nhan Vien
+===TPHCM: 3 NV; AVG = 19.67 trieu
+Ho va ten: Tran Thi C
+Luong: 30.000000
+Chuc vu: Bao Ve
+Ho va ten: Nguyen Van A
+Luong: 9.000000
+Chuc vu: Truong Phong
+Ho va ten: Le Van F
+Luong: 20.000000
+Chuc vu: Bao Ve
