@@ -1,22 +1,22 @@
 #include <iostream>
 
-
 using namespace std;
-
-
+// khai bao cau truc
 struct Node {
 	int value;
 	Node* next;
 	Node* prev;
 };
-struct DSLienKetKep {
+
+struct DoubleLinkedList {
 	Node* head;
 	Node* tail;
 };
-void init(DSLienKetKep& lk) {
-	lk.head = NULL;
-	lk.tail = NULL;
+// khai bao danh sach rong
+void init(DoubleLinkedList& ls) {
+	ls.head = ls.tail = NULL;
 }
+
 Node* createNode(int x) {
 	Node* p = new Node;
 	p->value = x;
@@ -24,155 +24,203 @@ Node* createNode(int x) {
 	p->prev = NULL;
 	return p;
 }
-void addFirst(DSLienKetKep& lk, int x) {
+//add first
+void addFirst(DoubleLinkedList& ls, int x) {
 	Node* p = createNode(x);
-	if (lk.head == NULL) {
-		lk.head = lk.tail = p;
+	if (ls.head == NULL) {
+		ls.head = ls.tail = p;
 	}
 	else {
-		p->next = lk.head;
-		lk.head->prev = p;
-		lk.head = p;
+		p->next = ls.head;
+		ls.head->prev = p;
+		ls.head = p;
 	}
 }
-void addLast(DSLienKetKep& lk, int x) {
+//add last
+void addLast(DoubleLinkedList& ls, int x) {
 	Node* p = createNode(x);
-	if (lk.head == NULL) {
-		lk.head = lk.tail = p;
+	if (ls.head == NULL) {
+		ls.head = ls.tail = p;
 	}
 	else {
-		lk.tail->next = p;
-		p->prev = lk.tail;
-		lk.tail = p;
+		ls.tail->next = p;
+		p->prev = ls.tail;
+		ls.tail = p;
 	}
 }
-void addNodeAfter(DSLienKetKep& lk, int giatri, int x) {
-	Node* q = lk.head;
-	if (lk.head != NULL) {
-		while (q != NULL && q->value != giatri) {
-			q = q->next;
-		}
-		if (q != NULL) {// da tim thay node
-			Node* p = createNode(x);
-			if (q == lk.tail) {
-				addLast(lk, x);
-			}
-			else {
-				p->next = q->next;
-				q->next->prev = p;
-				q->next = p;
-				p->prev = q;
-			}
-		}
-	}
-}
-void deleteFirst(DSLienKetKep& lk) {
-	if (lk.head != NULL) {
-		Node* p = lk.head;
-		lk.head = p->next;
-		if (p->next != NULL) {
-			lk.head->prev = NULL;
+//delete first
+void delFirst(DoubleLinkedList& ls) {
+	if (ls.head != NULL) {
+		Node* p = ls.head;
+		if (p->next == NULL)
+			ls.head = ls.tail = NULL;
+		else {
+			ls.head = ls.head->next;
 			p->next = NULL;
+			ls.head->prev = NULL;
 		}
 		delete(p);
 	}
 }
-void deleteLast(DSLienKetKep& lk) {
-	if (lk.head != NULL) {
-		Node* p = lk.tail;
+//delete last
+void delLast(DoubleLinkedList& ls) {
+	if (ls.head != NULL) {
+		Node* p = ls.tail;
 		if (p->prev == NULL) {
-			deleteFirst(lk);
-			/*lk.head = NULL;
-			lk.tail = NULL;*/
+			ls.head = ls.tail = NULL;
 		}
 		else {
-			lk.tail = p->prev;
-			lk.tail->next = NULL;
+			ls.tail = ls.tail->prev;
+			ls.tail->next = NULL;
 			p->prev = NULL;
-			delete(p);
 		}
-		//delete(p);
+		delete(p);
 	}
 }
-void deleteNode(DSLienKetKep& lk, int giatri) {
-	if (lk.head != NULL) {
-		Node* p = lk.head;
-		Node* prevNode = NULL;
-		
-		while (p != NULL && p->value != giatri) {
-			prevNode = p;
+//find and delete
+void deleteNode(DoubleLinkedList& ls, int x) {
+	if (ls.head != NULL) {
+		Node* p = ls.head;
+		Node* prev = NULL;
+		while (p != NULL && p->value != x) {
+			prev = p;
 			p = p->next;
 		}
-		if (p != NULL) {// da tim thay
-			if (prevNode == NULL) {
-				deleteFirst(lk);
+		if (p != NULL) {
+			if (prev == NULL) {
+				delFirst(ls);
+				return;
 			}
 			else if (p->next == NULL) {
-				deleteLast(lk);
+				delLast(ls);
+				return;
 			}
 			else {
-				prevNode->next = p->next;
-				p->prev = NULL;
-				p->next->prev = prevNode;
+				prev->next = p->next;
+				p->next->prev = prev;
 				p->next = NULL;
+				p->prev = NULL;
 				delete(p);
 			}
 		}
+
 	}
 }
-Node* search(DSLienKetKep& lk, int giatri) {
-	Node* p = lk.head;
-	for (; p != NULL; p = p->next) {
-		if (p->value == giatri)
-			return p;
-	}
-	return NULL;
+//hehe
+bool max(int a, int b) {
+	return a > b;
 }
-void outputLeftToRight(DSLienKetKep lk) {
-	Node* p = lk.head;
+bool min(int a, int b) {
+	return a < b;
+}
+Node* search(DoubleLinkedList ls, int x) {
+	if (ls.head != NULL) {
+		Node* p = ls.head;
+		while (p != NULL && p->value != x) {
+			p = p->next;
+		}return p;
+	}
+}
+Node* search(DoubleLinkedList ls, bool cmp(int ,int )) {
+	Node* num = ls.head;
+	Node* p = ls.head->next;
+	while (p != NULL) {
+		if (cmp(p->value, num->value) == true)
+			num->value = p->value;
+		p = p->next;
+	}
+	return num;
+}
+//search and add 
+void addNodeAfter(DoubleLinkedList ls, int prev, int x) {
+	if (ls.head != NULL) {
+		Node* p = search(ls, prev);
+		Node* add = createNode(x);
+		if (p != NULL) {
+			if (p->next == NULL) {
+				addLast(ls, x);
+			}
+			else {
+				add->next = p->next;
+				p->next->prev = add;
+				add->prev = p;
+				p->next = add;
+			}
+		}
+		system("Color C");
+	}
+}
+//xuat danh sach
+void output(DoubleLinkedList ls) {
+	Node* p = ls.head;
 	while (p != NULL) {
 		cout << p->value << "\t";
 		p = p->next;
 	}cout << endl;
 }
-void outputRightToleft(DSLienKetKep lk) {
-	Node* p = lk.tail;
-	while (p != NULL) {
-		cout << p->value << "\t";
-		p = p->prev;
-	}cout << endl;
+//giai phong phan tu khoi heappp
+void clearNode(DoubleLinkedList& ls)
+{
+	while (ls.head != NULL)
+	{
+		delFirst(ls);
+	};
+	cout << "CLEAR!\n";
 }
-void clean(DSLienKetKep& lk) {
-	while (lk.head != NULL) {
-		deleteFirst(lk);
+
+void addNodeInSortLinkedist(DoubleLinkedList& ls, int x) {
+	if (ls.head != NULL) {
+		Node* p = createNode(x);
+		Node* q = ls.head;
+		while (q != NULL && x > q->value)
+			q = q->next;
+		if (q == ls.head)
+			addFirst(ls, x);
+		else {
+			addNodeAfter(ls, q->prev->value, x);
+		}
+
 	}
-	cout << "Clean danh sach thanh cong!" << endl;
+}
+void swapNode(int &a, int &b)
+{
+	a = a ^ b;
+	b = a ^ b;
+	a = a ^ b;
+}
+void interchangeSort(DoubleLinkedList &ls)
+{
+	for (Node *i = ls.head; i != NULL; i = i->next)
+	{
+		for (Node *j = i->next; j != NULL; j = j->next)
+		{
+			if (i->value > j->value)
+			{
+				swapNode(i->value, j->value);
+			}
+		}
+	}
+}
+int count(DoubleLinkedList ls) {
+	if (ls.head != NULL) {
+		Node* p = ls.head;
+		int cnt = 0;
+		while (p != NULL) {
+			cnt++;
+			p = p->next;
+		}return cnt;
+	}
 }
 int main() {
-	DSLienKetKep lk;
-	init(lk);
-	addFirst(lk, 1);
-	addFirst(lk, 2);
-	addFirst(lk, 9);
-	addLast(lk, 10);
-	addLast(lk, 100);
-	addNodeAfter(lk, 10, 99);
-	outputLeftToRight(lk);
-	cout << "Tim node: ";
-	int node; cin >> node;
-	Node* q = search(lk, node);
-	if (q == NULL)
-		cout << "Khong tim thay" << endl;
-	else {
-		cout << "Dia chi cua node: " << q << endl;
-		cout << "Gia tri cua node = " << q->value << endl;
-	}
-	//deleteFirst(lk);
-	//deleteLast(lk);
-	//outputLeftToRight(lk);
-	//deleteNode(lk,1);
-	//outputLeftToRight(lk);
-	clean(lk);
-	//outputRightToleft(lk);
+	DoubleLinkedList ls;
+	init(ls);
+	addLast(ls, 80);
+	addFirst(ls, 55);
+	addFirst(ls, 56);
+	addLast(ls, 90);
+	addNodeAfter(ls, 55, 100);
+	cout << search(ls, 56)->value << endl;
+	cout << count(ls) << endl;
+	clearNode(ls);
 	return 1;
 }
